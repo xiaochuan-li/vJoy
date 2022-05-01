@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/statics">
+        <file>statics/game.png</file>
+    </qresource>
+</RCC>
