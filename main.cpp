@@ -4,7 +4,6 @@
 
 #include <QMessageBox>
 #include <QApplication>
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -17,6 +16,7 @@ int main(int argc, char *argv[])
         return 0;
     }
     w.show();
+
     shared.create(1);
     return a.exec();
 }

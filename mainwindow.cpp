@@ -13,26 +13,27 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
 
     setFixedSize(this->width(),this->height());
-    hotkey = new QHotkey (QKeySequence("Ctrl+S"), true, this);
-    hotkeySwitch = new QHotkey (QKeySequence("Ctrl+Q"), true, this);
-    QObject::connect(hotkey, &QHotkey::activated, this, &MainWindow::browse);
+    hotkey = new QHotkey (QKeySequence("Ctrl+Q"), true, this);
+    hotkeySwitch = new QHotkey (QKeySequence("Ctrl+S"), true, this);
+    QObject::connect(hotkey, &QHotkey::activated, this, &MainWindow::closeWindow);
     QObject::connect(hotkeySwitch, &QHotkey::activated, ctrl, &Controller::changeState);
 
     tp = new QSystemTrayIcon(this);
     tp->setIcon(QIcon(":/statics/statics/game.png"));
     action = new QAction("&退出(Exit)");
 
-    connect(action, &QAction::triggered, this, [&](){
-        tp->setVisible(false);
-        close();
-        emit pageClose();
-    });
+    connect(action, &QAction::triggered, this, &MainWindow::closeWindow);
     menu = new QMenu();
     menu->addAction(action);
     tp->setContextMenu(menu);
     tp->show();
+    ctrl->setMediapipe(QCoreApplication::applicationDirPath()+"/mediapipe");
 }
-
+void MainWindow::closeWindow(){
+    tp->setVisible(false);
+    close();
+    emit pageClose();
+}
 MainWindow::~MainWindow()
 {
     delete ui;

@@ -10,8 +10,13 @@ Short for virtual joystick, witch use the headpose as the input to control games
 ## Refer to the release for prebuild packages
 Do remember to install ViGEmBus at the very begining.
 
-## what's next ?
+## What's next ?
 - [x] Qt implementation 
 - [ ] more complex operations
 - [ ] direct communication with ViGEm
 - [ ] ...
+
+## Updates
+- 2022/5/3 
+    - replacing ViGEm-interface with ViGEmClient, making the movements contiue and smooth.
+    - adding necessary dlls to the archive, including opencv_world452, zlib and hdf5.

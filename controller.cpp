@@ -7,7 +7,8 @@ Controller::Controller(QObject *parent)
 {
     res = new float[512*4];
     timer = new QTimer(this);
-    process = new QProcess(this);
+    stick = new Stick();
+    //process = new QProcess(this);
     smoother = new ExpSmoother(0.5);
     det = nullptr;
 }
@@ -27,11 +28,7 @@ void Controller::sendSignal(){
         }else{
             x = x - base_x;
             y = y - base_y;
-            int a = x < -0.1? 0: (x<0.1?1:2);
-            int b = y < -0.1? 0: (y<0.1?1:2);
-            int level = b*3 + a + 1;
-
-            process->write(QString("@ L%1\n").arg(level).toStdString().c_str());
+            stick->update(x*2, y*2);
         }
     }
 }
@@ -39,10 +36,8 @@ void Controller::sendSignal(){
 void Controller::setMediapipe(QString path){
     mediapipePath = path;
     QString DllPath = mediapipePath + QString("/face_mesh_cpu_extern.dll");
-    //DllPath = QString("D:/C++/mediapipe/bazel-bin/mediapipe/examples/desktop/extern/face_mesh_cpu_extern.dll");
-
-    QLibrary mylib(DllPath);   //声明所用到的dll文件
-    if (mylib.load())              //判断是否正确加载
+    QLibrary mylib(DllPath);
+    if (mylib.load())
     {
         createDetector getDetector=(createDetector)mylib.resolve("getDetector");    //援引 add() 函数
         if (getDetector)
@@ -52,11 +47,7 @@ void Controller::setMediapipe(QString path){
             det->_init(pbPath.toStdString().c_str(), pbPath.size());
         }
     }
-
-    QString intPath = mediapipePath + QString("/vigem-interface.exe");
-    process->start(intPath.toStdString().c_str());
     connect(timer, &QTimer::timeout, this, &Controller::sendSignal);
-
 }
 void Controller::changeState(){
     if(state){
@@ -83,10 +74,11 @@ void Controller::changeState(){
 }
 Controller::~Controller(){
     timer->stop();
-    process->kill();
+    //process->kill();
     cap.release();
     delete timer;
-    delete process;
+    //delete process;
     delete res;
+    delete stick;
     delete smoother;
 }

@@ -13,6 +13,7 @@
 #include <QLibrary>
 
 #include <windows.h>
+#include "stick.h"
 typedef ExternDetector* (*createDetector)();
 
 class ExpSmoother{
@@ -43,7 +44,8 @@ class Controller : public QObject
     Q_OBJECT
 public:
     QTimer *timer;
-    QProcess *process;
+    //QProcess *process;
+    Stick * stick;
     ExternDetector* det;
     ExpSmoother *smoother;
 

@@ -13,18 +13,22 @@ SOURCES += \
     controller.cpp \
     main.cpp \
     mainwindow.cpp \
-    test.cpp
+    stick.cpp \
 
 HEADERS += \
     controller.h \
     externDetector.h \
-    mainwindow.h
+    mainwindow.h \
+    stick.h \
 
 FORMS += \
     mainwindow.ui
 
-INCLUDEPATH += D:/software/opencv/install/include/
-LIBS += D:/software/opencv/install/x64/vc16/lib/opencv_world452.lib
+INCLUDEPATH += D:/software/opencv/install/include/ \
+    ./include/
+LIBS += D:/software/opencv/install/x64/vc16/lib/opencv_world452.lib \
+    D:/C++/Qt_test/vJoy/lib/ViGEmClient.lib \
+    setupapi.lib
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
@@ -35,7 +39,12 @@ msvc{
     }
 RESOURCES += \
     statics.qrc
-    #msvc{
-    #    QMAKE_CFLAGS += /utf-8
-    #    QMAKE_CXXFLAGS += /utf-8
-    #    }
+
+
+CONFIG(debug, debug|release) {
+    QMAKE_CXXFLAGS_DEBUG += /MTd
+}
+
+CONFIG(release, debug|release) {
+    QMAKE_CXXFLAGS_RELEASE += /MT /NODEFAULTLIB:msvcrt.lib
+}

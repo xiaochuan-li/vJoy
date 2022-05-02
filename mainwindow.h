@@ -26,11 +26,11 @@ public:
     QMenu *menu;
     Controller * ctrl;
     MainWindow(QWidget *parent = nullptr);
-
     ~MainWindow();
 signals:
     void pageClose(void);
 public slots:
+    void closeWindow(void);
     void browse(){
         QString file_name = QFileDialog::getExistingDirectory(this,"Mediapipe Directory",".");
         if(file_name.compare("") != 0 ){
