@@ -8,7 +8,7 @@ Short for virtual joystick, witch use the headpose as the input to control games
 * [QHotKey](https://github.com/Skycoder42/QHotkey) for global hotkey support. Eazy to use.
 
 ## Refer to the release for prebuild packages
-Do remember to install ViGEmBus at the very begining.
+Do remember to install ViGEmBus at the very begining (a prebuilt .msi setupfile is provided in /path/to/your/installation/mediapipe/, just double click it and ViGEmBus will be installed).
 
 ## What's next ?
 - [x] Qt implementation 
