@@ -9,7 +9,8 @@ Short for virtual joystick, witch use the headpose as the input to control games
 
 ## Refer to the release for prebuild packages
 Do remember to install ViGEmBus at the very begining (a prebuilt .msi setupfile is provided in /path/to/your/installation/mediapipe/, just double click it and ViGEmBus will be installed).
-
+## How to use ?
+Just double click the icon to start the program. press `ctrl + S` to enable/disable emulation, and press `ctrl + Q` to stop the program.
 ## What's next ?
 - [x] Qt implementation 
 - [ ] more complex operations
