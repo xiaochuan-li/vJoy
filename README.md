@@ -18,5 +18,5 @@ Do remember to install ViGEmBus at the very begining.
 
 ## Updates
 - 2022/5/3 
-    - replacing ViGEm-interface with ViGEmClient, making the movements contiue and smooth.
+    - replacing [ViGEm-interface](https://github.com/henrikvik/vigem-interface) with [ViGEmClient](https://github.com/ViGEm/ViGEmClient), making the movements contiue and smooth.
     - adding necessary dlls to the archive, including opencv_world452, zlib and hdf5.
