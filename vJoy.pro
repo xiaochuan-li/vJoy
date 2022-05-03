@@ -11,12 +11,14 @@ CONFIG += c++11
 
 SOURCES += \
     controller.cpp \
+    detectors.cpp \
     main.cpp \
     mainwindow.cpp \
     stick.cpp \
 
 HEADERS += \
     controller.h \
+    detectors.h \
     externDetector.h \
     mainwindow.h \
     stick.h \

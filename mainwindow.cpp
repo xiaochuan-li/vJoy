@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
 
     setFixedSize(this->width(),this->height());
+    configs = getConfigs();
+
     hotkey = new QHotkey (QKeySequence("Ctrl+Q"), true, this);
     hotkeySwitch = new QHotkey (QKeySequence("Ctrl+S"), true, this);
     QObject::connect(hotkey, &QHotkey::activated, this, &MainWindow::closeWindow);
@@ -20,14 +22,42 @@ MainWindow::MainWindow(QWidget *parent)
 
     tp = new QSystemTrayIcon(this);
     tp->setIcon(QIcon(":/statics/statics/game.png"));
-    action = new QAction("&退出(Exit)");
-
-    connect(action, &QAction::triggered, this, &MainWindow::closeWindow);
     menu = new QMenu();
+
+    action = new QAction("&退出(Exit)");
+    connect(action, &QAction::triggered, this, &MainWindow::closeWindow);
+
+    AG=new QActionGroup(this);
+    for(int i=0;i<configs.size();i++){
+        auto action = new QAction(configs[i].name);
+        AG->addAction(action);
+        action->setCheckable(true);
+        actionlist.push_back(action);
+        menu->addAction(action);
+    }
+    connect(AG,&QActionGroup::triggered,this,
+            [=]()mutable
+    {
+        for(int i=0; i< actionlist.size(); i++){
+            if (actionlist[i]->isChecked()){
+                qDebug() << "check" << configs[i].isValid();
+                if(configs[i].isValid()){
+                    ctrl->setMediapipe(configs[i]);
+                }else{
+                    char info[10240];
+                    configs[i].print(info);
+                    qDebug() << "CONFIG NOT VALID: "<< info;
+                }
+                break;
+            }
+        }
+    }
+    );
+
     menu->addAction(action);
     tp->setContextMenu(menu);
     tp->show();
-    ctrl->setMediapipe(QCoreApplication::applicationDirPath()+"/mediapipe");
+
 }
 void MainWindow::closeWindow(){
     tp->setVisible(false);
@@ -43,5 +73,9 @@ MainWindow::~MainWindow()
     delete action;
     delete menu;
     delete ctrl;
+    for(int i=0;i<actionlist.size();i++){
+        delete actionlist[i];
+    }
+    delete AG;
 }
 

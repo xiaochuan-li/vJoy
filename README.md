@@ -21,3 +21,5 @@ Just double click the icon to start the program. press `ctrl + S` to enable/disa
 - 2022/5/3 
     - replacing [ViGEm-interface](https://github.com/henrikvik/vigem-interface) with [ViGEmClient](https://github.com/ViGEm/ViGEmClient), making the movements contiue and smooth.
     - adding necessary dlls to the archive, including opencv_world452, zlib and hdf5.
+- 2022/5/4
+    - adding hand_tracking module, optimizing project structue.

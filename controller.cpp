@@ -1,6 +1,8 @@
 #include "controller.h"
 
-
+float bound(float a, float l, float h){
+    return (a<l?a:(a>h?h:a));
+}
 
 Controller::Controller(QObject *parent)
     : QObject{parent}
@@ -10,6 +12,8 @@ Controller::Controller(QObject *parent)
     stick = new Stick();
     //process = new QProcess(this);
     smoother = new ExpSmoother(0.5);
+    connect(timer, &QTimer::timeout, this, &Controller::sendSignal);
+
     det = nullptr;
 }
 
@@ -19,8 +23,8 @@ void Controller::sendSignal(){
     bool updated=false;
     det->update(frame, res, updated);
     if(updated){
-        float x = res[0];
-        float y = 1 - res[1];
+        float x = (res[5*3] + res[9*3] +res[13*3])/3;
+        float y = 1 - (res[5*3+1] + res[9*3+1] +res[13*3+1])/3;
         smoother->update(x, y);
         if (base_x==-1 && base_y==-1){
             base_x = x;
@@ -28,26 +32,26 @@ void Controller::sendSignal(){
         }else{
             x = x - base_x;
             y = y - base_y;
-            stick->update(x*2, y*2);
+            x = x*2;
+            y = y*2;
+            stick->update(bound(x, -1, 1), bound(y, -1, 1));
         }
     }
 }
 
-void Controller::setMediapipe(QString path){
-    mediapipePath = path;
-    QString DllPath = mediapipePath + QString("/face_mesh_cpu_extern.dll");
-    QLibrary mylib(DllPath);
+void Controller::setMediapipe(DetectorConfig config){
+
+    QLibrary mylib(config.dllPath);
     if (mylib.load())
     {
         createDetector getDetector=(createDetector)mylib.resolve("getDetector");    //援引 add() 函数
         if (getDetector)
         {
-            QString pbPath = mediapipePath + QString("/face_mesh_desktop_live.pbtxt");
             det = getDetector();
-            det->_init(pbPath.toStdString().c_str(), pbPath.size());
+            det->_init(config);
         }
     }
-    connect(timer, &QTimer::timeout, this, &Controller::sendSignal);
+    ready=true;
 }
 void Controller::changeState(){
     if(state){
@@ -61,7 +65,7 @@ void Controller::changeState(){
         state = !state;
 
     }else{
-        if (mediapipePath.compare("")!= 0)
+        if (ready)
         {
             timer->start(20);
             if (!cap.isOpened()){
@@ -74,10 +78,8 @@ void Controller::changeState(){
 }
 Controller::~Controller(){
     timer->stop();
-    //process->kill();
     cap.release();
     delete timer;
-    //delete process;
     delete res;
     delete stick;
     delete smoother;

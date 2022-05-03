@@ -53,22 +53,20 @@ public:
     float *res;
     cv::Mat frame;
     float base_x=-1, base_y=-1;
-    QString mediapipePath;
     bool state=false;
+    bool ready = false;
 
 
     explicit Controller(QObject *parent = nullptr);
 
-    bool isReady(){
-        return !mediapipePath.compare("");
-    }
+
     ~Controller();
 
 signals:
     void updateStr(QString& str);
 public slots:
     void sendSignal();
-    void setMediapipe(QString path);
+    void setMediapipe(DetectorConfig config);
     void changeState();
 
 };

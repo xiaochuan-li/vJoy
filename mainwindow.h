@@ -10,7 +10,9 @@
 #include <QKeyEvent>
 #include <QDialog>
 #include "controller.h"
-
+#include "externDetector.h"
+#include "detectors.h"
+#include <QActionGroup>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -25,18 +27,16 @@ public:
     QAction* action;
     QMenu *menu;
     Controller * ctrl;
+    QActionGroup *AG;
+    std::vector<QAction *> actionlist;
+    std::vector<DetectorConfig> configs;
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 signals:
     void pageClose(void);
 public slots:
     void closeWindow(void);
-    void browse(){
-        QString file_name = QFileDialog::getExistingDirectory(this,"Mediapipe Directory",".");
-        if(file_name.compare("") != 0 ){
-            ctrl->setMediapipe(file_name);
-        }
-    }
 
 private:
     Ui::MainWindow *ui;
